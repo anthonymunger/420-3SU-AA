@@ -1,7 +1,7 @@
 <?php
-require 'config.php';
+require __DIR__ . '/../../config/database.php';
 
-class Database {
+class connexionDatabase {
     private static $pdo;
 
     public static function getConnexion() {

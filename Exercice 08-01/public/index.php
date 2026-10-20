@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 // =============================================================================
 // FICHIER DE DÉPART — Gestion de tâches avec projets
 // =============================================================================
@@ -30,141 +31,9 @@
 //
 // =============================================================================
 
-// --- CONNEXION BASE DE DONNÉES -----------------------------------------------
-define('DB_HOST',    'localhost');
-define('DB_NAME',    'gestion_taches');
-define('DB_USER',    'root');
-define('DB_PASS',    '');
-define('DB_CHARSET', 'utf8');
-
-class connexionDatabase
-{
-    private static $pdo;
-
-    public static function getConnexion()
-    {
-        if (self::$pdo === null) {
-            $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=" . DB_CHARSET;
-            try {
-                self::$pdo = new PDO($dsn, DB_USER, DB_PASS);
-                self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            } catch (PDOException $e) {
-                die("Erreur de connexion à la base de données : " . $e->getMessage());
-            }
-        }
-        return self::$pdo;
-    }
-}
-
-
-
-// --- FONCTIONS MODÈLE — PROJETS ----------------------------------------------
-
-function getProjets() {
-    $pdo = connexionDatabase::getConnexion();
-    $stmt = $pdo->query("SELECT * FROM projets ORDER BY nom");
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
-
-function getProjetById($id) {
-    $pdo = connexionDatabase::getConnexion();
-    $stmt = $pdo->prepare("SELECT * FROM projets WHERE id = :id");
-    $stmt->execute([':id' => $id]);
-    return $stmt->fetch(PDO::FETCH_ASSOC);
-}
-
-function insertProjet($nom, $description) {
-    $pdo = connexionDatabase::getConnexion();
-    $stmt = $pdo->prepare("INSERT INTO projets (nom, description) VALUES (:nom, :description)");
-    $stmt->execute([':nom' => $nom, ':description' => $description]);
-}
-
-// TODO
-// -----------------------------------------------------------------------------
-// DÉFI : Cette fonction plante si le projet contient des tâches.
-// Pourquoi ?
-//      - Votre réponse ici.
-// Comment régleriez-vous ce problème dans le PHP et dans le SQL ?
-//      - Votre réponse ici.
-// -----------------------------------------------------------------------------
-function deleteProjet($id) {
-    $pdo = connexionDatabase::getConnexion();
-    $stmt = $pdo->prepare("DELETE FROM projets WHERE id = :id");
-    $stmt->execute([':id' => $id]);
-}
-
-// --- FONCTIONS MODÈLE — TÂCHES -----------------------------------------------
-
-function getTaches() {
-    $pdo = connexionDatabase::getConnexion();
-    $stmt = $pdo->query("
-        SELECT taches.*, projets.nom AS nom_projet
-        FROM taches
-        JOIN projets ON taches.projet_id = projets.id
-        ORDER BY FIELD(taches.priorite, 'haute', 'normale', 'basse'), taches.titre
-    ");
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
-
-function getTacheById($id) {
-    $pdo = connexionDatabase::getConnexion();
-    $stmt = $pdo->prepare("
-        SELECT taches.*, projets.nom AS nom_projet
-        FROM taches
-        JOIN projets ON taches.projet_id = projets.id
-        WHERE taches.id = :id
-    ");
-    $stmt->execute([':id' => $id]);
-    return $stmt->fetch(PDO::FETCH_ASSOC);
-}
-
-function insertTache($titre, $description, $priorite, $projet_id) {
-    $pdo = connexionDatabase::getConnexion();
-    $stmt = $pdo->prepare("
-        INSERT INTO taches (titre, description, priorite, projet_id)
-        VALUES (:titre, :description, :priorite, :projet_id)
-    ");
-    $stmt->execute([
-        ':titre'       => $titre,
-        ':description' => $description,
-        ':priorite'    => $priorite,
-        ':projet_id'   => (int)$projet_id,
-    ]);
-}
-
-function updateTache($id, $titre, $description, $priorite, $projet_id) {
-    $pdo = connexionDatabase::getConnexion();
-    $stmt = $pdo->prepare("
-        UPDATE taches SET titre = :titre, description = :description,
-        priorite = :priorite, projet_id = :projet_id
-        WHERE id = :id
-    ");
-    $stmt->execute([
-        ':id'          => (int)$id,
-        ':titre'       => $titre,
-        ':description' => $description,
-        ':priorite'    => $priorite,
-        ':projet_id'   => (int)$projet_id,
-    ]);
-}
-
-function deleteTache($id) {
-    $pdo = connexionDatabase::getConnexion();
-    $stmt = $pdo->prepare("DELETE FROM taches WHERE id = :id");
-    $stmt->execute([':id' => (int)$id]);
-}
-
-function demarrerTache($id) {
-    $pdo = connexionDatabase::getConnexion();
-    $stmt = $pdo->prepare("UPDATE taches SET statut = 'en cours' WHERE id = :id AND statut = 'à faire'");
-    $stmt->execute([':id' => (int)$id]);
-}
-
-function terminerTache($id) {
-    $pdo = connexionDatabase::getConnexion();
-    $stmt = $pdo->prepare("UPDATE taches SET statut = 'terminé' WHERE id = :id AND statut = 'en cours'");
-    $stmt->execute([':id' => (int)$id]);
-}
+require __DIR__ . "/../src/models/connexionDatabase.php";
+require __DIR__ . "/../src/models/projets.php";
+require __DIR__ . "/../src/models/taches.php";
 
 // --- ROUTEUR -----------------------------------------------------------------
 
