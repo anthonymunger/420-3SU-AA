@@ -1,5 +1,4 @@
 <?php
-require __DIR__ . "/../models/connexionDatabase.php";
 require __DIR__ . "/../models/projets.php";
 
 function afficherProjets():void {
