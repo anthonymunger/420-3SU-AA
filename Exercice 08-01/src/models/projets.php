@@ -23,9 +23,11 @@ function insertProjet($nom, $description) {
 // -----------------------------------------------------------------------------
 // DÉFI : Cette fonction plante si le projet contient des tâches.
 // Pourquoi ?
-//      - Votre réponse ici.
+//      - La table tâches est en "On delete RESTRICT" et non "On delete CASCADE", ça donne donc une erreur.
 // Comment régleriez-vous ce problème dans le PHP et dans le SQL ?
-//      - Votre réponse ici.
+//      - PHP : Supprimer les tâches associées, et puis supprimer la table.
+//      OU
+//      - SQL : Changer de "On delete RESTRICT" à "On delete CASCADE".
 // -----------------------------------------------------------------------------
 function deleteProjet($id) {
     $pdo = connexionDatabase::getConnexion();

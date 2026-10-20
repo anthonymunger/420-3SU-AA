@@ -11,14 +11,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     match(true) {
         $action === 'afficher_taches'   => afficherTaches(),
         $action === 'ajouter_tache'     => afficherAjoutTache(),
-        $action === 'modifier_tache'    => afficherModificationTache(),
         $action === 'afficher_projets'  => afficherProjets(),
-        $action === 'ajouter_projets'   => afficherAjoutProjet(),
+        $action === 'ajouter_projet'   => afficherAjoutProjet(),
         default => header('Location: ?action=afficher_taches'),
     };
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
     match(true) {
         $action === 'ajouter_tache'=> ajouterTache(),
+        $action === 'modifierform'    => afficherModificationTache(),
         $action === 'modifier_tache'=> modifierTache(),
         $action === 'supprimer_tache'=> supprimerTache(),
         $action === 'demarrer'=> demarrerTacheController(),
