@@ -1,7 +1,6 @@
 <?php
 declare(strict_types=1);
 
-require __DIR__ . "/../src/models/connexionDatabase.php";
 require __DIR__ . "/../src/controllers/TachesController.php";
 require __DIR__ . "/../src/controllers/ProjetsController.php";
 

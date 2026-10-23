@@ -1,4 +1,5 @@
 <?php
+require_once "connexionDatabase.php";
 
 function getTaches() {
     $pdo = connexionDatabase::getConnexion();

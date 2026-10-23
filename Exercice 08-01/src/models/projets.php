@@ -1,4 +1,5 @@
 <?php
+require_once "connexionDatabase.php";
 
 function getProjets() {
     $pdo = connexionDatabase::getConnexion();
