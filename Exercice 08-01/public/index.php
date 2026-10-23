@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $action === 'ajouter_tache'     => afficherAjoutTache(),
         $action === 'afficher_projets'  => afficherProjets(),
         $action === 'ajouter_projet'   => afficherAjoutProjet(),
-        default => header('Location: ?action=afficher_taches'),
+        default => header('Location: ?action=afficher_taches', true, 303),
     };
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
     match(true) {
@@ -25,6 +25,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $action === 'terminer'=> terminerTacheController(),
         $action === 'ajouter_projet'=> ajouterProjet(),
         $action === 'supprimer_projet'=> supprimerProjet(),
-        default => header('Location: index.php'),
+        default => header('Location: index.php', true, 303),
     };
 }
